@@ -1,0 +1,113 @@
+{
+	"version": 0,
+	"dependencies": [
+		{
+			"importpath": "github.com/juju/ansiterm",
+			"repository": "https://github.com/juju/ansiterm",
+			"vcs": "git",
+			"revision": "b99631de12cf04a906c1d4e4ec54fb86eae5863d",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/juju/deputy",
+			"repository": "https://github.com/juju/deputy",
+			"vcs": "git",
+			"revision": "9db96ecdd1479ea997e6e6e461e145ddd55ea561",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/juju/loggo",
+			"repository": "https://github.com/juju/loggo",
+			"vcs": "git",
+			"revision": "3b7ece48644d35850f4ced4c2cbc2cf8413f58e0",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/juju/testing/checkers",
+			"repository": "https://github.com/juju/testing",
+			"vcs": "git",
+			"revision": "cad2dd5fff869bac963652191cf2cc41a72a41a2",
+			"branch": "master",
+			"path": "/checkers",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/lunixbochs/vtclean",
+			"repository": "https://github.com/lunixbochs/vtclean",
+			"vcs": "git",
+			"revision": "4fbf7632a2c6d3fbdb9931439bdbbeded02cbe36",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/mattn/go-colorable",
+			"repository": "https://github.com/mattn/go-colorable",
+			"vcs": "git",
+			"revision": "ed8eb9e318d7a84ce5915b495b7d35e0cfe7b5a8",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/mattn/go-isatty",
+			"repository": "https://github.com/mattn/go-isatty",
+			"vcs": "git",
+			"revision": "66b8e73f3f5cda9f96b69efd03dd3d7fc4a5cdb8",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/monochromegane/slack-incoming-webhooks",
+			"repository": "https://github.com/monochromegane/slack-incoming-webhooks",
+			"vcs": "git",
+			"revision": "606a6be46685c73cebb454607c553332ad93b160",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/sys/unix",
+			"repository": "https://go.googlesource.com/sys",
+			"vcs": "git",
+			"revision": "8f0908ab3b2457e2e15403d3697c9ef5cb4b57a9",
+			"branch": "master",
+			"path": "/unix",
+			"notests": true
+		},
+		{
+			"importpath": "gopkg.in/check.v1",
+			"repository": "https://gopkg.in/check.v1",
+			"vcs": "git",
+			"revision": "4f90aeace3a26ad7021961c297b22c42160c7b25",
+			"branch": "v1",
+			"notests": true
+		},
+		{
+			"importpath": "gopkg.in/mgo.v2/bson",
+			"repository": "https://gopkg.in/mgo.v2",
+			"vcs": "git",
+			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
+			"branch": "v2",
+			"path": "/bson",
+			"notests": true
+		},
+		{
+			"importpath": "gopkg.in/mgo.v2/internal/json",
+			"repository": "https://gopkg.in/mgo.v2",
+			"vcs": "git",
+			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
+			"branch": "v2",
+			"path": "internal/json",
+			"notests": true
+		},
+		{
+			"importpath": "gopkg.in/yaml.v2",
+			"repository": "https://gopkg.in/yaml.v2",
+			"vcs": "git",
+			"revision": "31c299268d302dd0aa9a0dcf765a3d58971ac83f",
+			"branch": "v2",
+			"notests": true
+		}
+	]
+}
