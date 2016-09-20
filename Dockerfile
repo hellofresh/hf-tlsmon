@@ -9,13 +9,13 @@ FROM gliderlabs/alpine:3.4
 #
 
 # The release version of hf-tlsmon to add to the container.
-ENV HF_TLSMON_REL v0.0.1
+ENV HF_TLSMON_REL v0.0.2
 
 # Put sslcheck command into place.
 COPY sslcheck /usr/local/bin/sslcheck
 
 # Put hf-tlsmon utility into place. Use GitHub release version.
-ADD ["https://github.com/hellofresh/hf-tlsmon/releases/download/${HF_TLSMON_REL}/hf-tlsmon", "/usr/local/bin/hf-tlsmon"]
+ADD https://github.com/hellofresh/hf-tlsmon/releases/download/$HF_TLSMON_REL/hf-tlsmon /usr/local/bin/hf-tlsmon
 
 # Make sure hf-tlsmon is executable.
 RUN chmod +x /usr/local/bin/hf-tlsmon
