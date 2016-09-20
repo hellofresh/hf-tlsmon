@@ -210,11 +210,11 @@ func main() {
 
 } // main
 
+// Creating the attachments for the Slack incoming webhook payload.
 func creatSlackMsgAtchmnt(tlsHost *TLSHost, numChkdHosts int) *slack.Attachment {
 	atchmnt := slack.Attachment{
 		Title: "TLS/SSL cert expiration alert.",
 		Color: "danger",
-		//			Pretext: fmt.Sprintf("Following TLS/SSL host is in ALERT state: (checked hosts: %d)", numChkdHosts),
 		Fields: []*slack.Field{
 			&slack.Field{
 				Title: "TLS Host",
