@@ -4,12 +4,17 @@ FROM gliderlabs/alpine:3.4
 #
 # Usage:
 # - mount 'sslcheck' hosts file to '/etc/hf-tlsmon/tlshosts_to_check',
-# - use '-e' to set following environment variable: SLACK_INCOMING_WEBHOOK_URL,
+# - use '-e' to set following environment variables: 
+#   SLACK_INCOMING_WEBHOOK_URL -- full URL as provided by Slack,
+#   CERT_ALERT_THRESHOLD       -- an integer value indicating when an alert gets raised
+#                                 for a TLS host based on the days left until a TLS cert expires,
+#   STATSD_ADDRESS             -- optinal: to publish a hearbeat counter metric 'tlsmon.alive'
+#                                 to a StatsD instance; format must be 'host:port'.
 # - use '-it' and '--rm' run options (use only '-i' in a cron environment).
 #
 
 # The release version of hf-tlsmon to add to the container.
-ENV HF_TLSMON_REL v0.0.5
+ENV HF_TLSMON_REL v0.0.6
 
 # Put sslcheck command into place.
 COPY sslcheck /usr/local/bin/sslcheck

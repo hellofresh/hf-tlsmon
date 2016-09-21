@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/juju/deputy"
 	slack "github.com/monochromegane/slack-incoming-webhooks"
+	"github.com/peterbourgon/g2s"
 	"log"
 	"os"
 	"os/exec"
@@ -41,20 +42,23 @@ func (h TLSHost) hasAlertState(threshold int) bool {
 	return false
 }
 
-// An TLS host is in alert state if the TLS cert expires in less or equal 'ALERT_TRESHOLD' days.
 const (
-	ALERT_TRESHOLD              int    = 20
 	SSLCHECK_TLSHOSTS_FILE_PATH string = "/etc/hf-tlsmon/tlshosts_to_check"
+	STATSD_METRIC_NAME          string = "tlsmon.alive"
 )
 
 var (
 	// The Slack client for sending messages.
 	sc slack.Client
+	// An TLS host is in alert state if the TLS cert expires in less or equal 'alertThreshold' days.
+	certAlertThreshold int
+	// The StatsD client for publishing metrics.
+	statsd *g2s.Statsd = nil
 )
 
 // Make sure we're operable.
 func init() {
-	// Check if required environment variable is set and not empty.
+	// Check if required environment variables are set and not empty.
 	siwhu := os.Getenv("SLACK_INCOMING_WEBHOOK_URL")
 	if siwhu == "" {
 		log.Fatalf("Error: Required environment variable SLACK_INCOMING_WEBHOOK_URL is empty or unset.\n")
@@ -63,11 +67,43 @@ func init() {
 			WebhookURL: siwhu,
 		}
 	}
+	cat := os.Getenv("CERT_ALERT_THRESHOLD")
+	if cat == "" {
+		log.Fatalf("Error: Required environment variable CERT_ALERT_THRESHOLD is empty or unset.\n")
+	} else {
+		// Try to parse provided threshold string as integer.
+		if catInt, err := strconv.Atoi(cat); err != nil {
+			log.Fatalf("Error: Unable to parse given CERT_ALERT_THRESHOLD '%s' as integer value: %s\n", cat, err.Error())
+		} else {
+			certAlertThreshold = catInt
+		}
+	}
+	sda := os.Getenv("STATSD_ADDRESS")
+	if sda == "" {
+		log.Printf("Warning: Optional environment variable STATSD_ADDRESS is empty or unset. Not sending alive metric.\n")
+	} else {
+		s, err := g2s.Dial("udp", sda)
+		if err != nil {
+			log.Printf("WARNING: Unable to connect to StatsD host '%s'; error: %s. *Not* publishing metrics but running anyway.\n", sda, err.Error())
+		} else {
+			// Bind new StatsD client to global var.
+			statsd = s
+		}
+	}
+
 	// Check if TLS hosts file later used by 'sslcheck' command is there.
 	if _, err := os.Stat(SSLCHECK_TLSHOSTS_FILE_PATH); err != nil {
 		log.Fatalf("Required sslcheck config file '/etc/hf-tlsmon/tlshosts_to_check' not found. Error: %s\n", err.Error())
 	}
 
+}
+
+// Helper function for publishing counter metrics to StatsD.
+func incrStatsDCounterBy1(statsd *g2s.Statsd, counterName string) {
+	// Only do something if we have a valid client.
+	if statsd != nil {
+		statsd.Counter(1.0, counterName, 1)
+	}
 }
 
 // Helper function.
@@ -189,24 +225,28 @@ func main() {
 		debug.Printf("%#v\n", t)
 	}
 
-	log.Printf("***  TLS Hosts in ALTERT state (DaysLeft <= %d):  ***\n", ALERT_TRESHOLD)
+	log.Printf("***  TLS Hosts in ALTERT state (DaysLeft <= %d):  ***\n", certAlertThreshold)
 	// Collect attachments before sending message.
 	var atchmnts []*slack.Attachment
 	for _, t := range tlsHosts {
-		if t.hasAlertState(ALERT_TRESHOLD) {
+		if t.hasAlertState(certAlertThreshold) {
 			log.Printf("Host '%s' is in ALERT state - only %d days left before TLS cert expires.\n", t.Host, t.DaysLeft)
 			atchmnts = append(atchmnts, creatSlackMsgAtchmnt(&t, len(tlsHosts)))
 		}
 	}
 	// Send actual message containing all the hosts in alert state as attachments.
-	if err := sc.Post(&slack.Payload{
-		Text:        fmt.Sprintf("<!group> *Following TLS/SSL host(s) is/are in ALERT state (%d hosts checked):*", len(tlsHosts)),
-		Attachments: atchmnts,
-	}); err != nil {
-		log.Printf("Error sending message to Slack incoming webhook: %s\n", err.Error())
-		os.Exit(1)
+	if len(atchmnts) > 0 {
+		if err := sc.Post(&slack.Payload{
+			Text:        fmt.Sprintf("<!group> *Following TLS/SSL host(s) is/are in ALERT state (%d hosts checked):*", len(tlsHosts)),
+			Attachments: atchmnts,
+		}); err != nil {
+			log.Printf("Error sending message to Slack incoming webhook: %s\n", err.Error())
+			os.Exit(1)
+		}
+		log.Println("Successfully send message to Slack incoming webhook.")
 	}
-	log.Println("Successfully send message to Slack incoming webhook.")
+	// Indicate that a TLS hosts check took place and we are alive.
+	incrStatsDCounterBy1(statsd, STATSD_METRIC_NAME)
 
 } // main
 

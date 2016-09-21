@@ -67,6 +67,14 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/peterbourgon/g2s",
+			"repository": "https://github.com/peterbourgon/g2s",
+			"vcs": "git",
+			"revision": "5767a0b2078638d14800683fd0fe425604883f63",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "golang.org/x/sys/unix",
 			"repository": "https://go.googlesource.com/sys",
 			"vcs": "git",
