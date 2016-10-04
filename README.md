@@ -13,8 +13,10 @@ Usage example:
       -e SLACK_INCOMING_WEBHOOK_URL="<your-secret-incoming-webhook-URL>" \
       -e CERT_ALERT_THRESHOLD="<num-of-remaining-days-to-trigger-altert>" \
       -e STATSD_ADDRESS="<your-statsd-host>:<your-statsd-port>" \
+	  -e TEXT_MSG_SPECIAL_WORD=<your-special-word-here> \
       --rm \
       -v <your-sslcheck-hosts-file>:/etc/hf-tlsmon/tlshosts_to_check \
       quay.io/hellofresh/hf-tlsmon:<GitHub-releases-version>
 
-The [StatsD](https://github.com/etsy/statsd) address provided via `STATSD_ADDRESS` is optional. Without it, `hf-tlsmon` will still work but not publish it's aliveness metric.
+The [StatsD](https://github.com/etsy/statsd) address provided via `STATSD_ADDRESS` is optional. Without it, `hf-tlsmon` will still work but not publish it's aliveness metric.  
+The other _optional_ environment variable is `TEXT_MSG_SPECIAL_WORD` as defined in [Slack Basic message formatting - Variables](https://api.slack.com/docs/message-formatting#variables). If not provided, it defaults to `<!group>`.

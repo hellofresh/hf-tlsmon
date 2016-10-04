@@ -54,6 +54,10 @@ var (
 	certAlertThreshold int
 	// The StatsD client for publishing metrics.
 	statsd *g2s.Statsd = nil
+	// The "special word" in the text message which get's handled in a predefined way by the Slack client.
+	// Default value is '<!group>' because it's universally understood for paid and unpaid Slack teams.
+	// Reference: https://api.slack.com/docs/message-formatting#variables
+	txtMsgSpecialWord string = "group"
 )
 
 // Make sure we're operable.
@@ -90,12 +94,16 @@ func init() {
 			statsd = s
 		}
 	}
-
+	tmsw := os.Getenv("TEXT_MSG_SPECIAL_WORD")
+	if tmsw == "" {
+		log.Printf("Warning: Optional environment variable TEXT_MSG_SPECIAL_WORD is empty or unset. Falling back to '<!group>'.\n")
+	} else {
+		txtMsgSpecialWord = tmsw
+	}
 	// Check if TLS hosts file later used by 'sslcheck' command is there.
 	if _, err := os.Stat(SSLCHECK_TLSHOSTS_FILE_PATH); err != nil {
 		log.Fatalf("Required sslcheck config file '/etc/hf-tlsmon/tlshosts_to_check' not found. Error: %s\n", err.Error())
 	}
-
 }
 
 // Helper function for publishing counter metrics to StatsD.
@@ -237,7 +245,7 @@ func main() {
 	// Send actual message containing all the hosts in alert state as attachments.
 	if len(atchmnts) > 0 {
 		if err := sc.Post(&slack.Payload{
-			Text:        fmt.Sprintf("<!group> *Following TLS/SSL host(s) is/are in ALERT state (%d hosts checked):*", len(tlsHosts)),
+			Text:        fmt.Sprintf("<!%s> *Following TLS/SSL host(s) is/are in ALERT state (%d hosts checked):*", txtMsgSpecialWord, len(tlsHosts)),
 			Attachments: atchmnts,
 		}); err != nil {
 			log.Printf("Error sending message to Slack incoming webhook: %s\n", err.Error())
