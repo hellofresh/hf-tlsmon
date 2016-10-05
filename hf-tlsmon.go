@@ -244,8 +244,10 @@ func main() {
 	}
 	// Send actual message containing all the hosts in alert state as attachments.
 	if len(atchmnts) > 0 {
+		txtMsgToSend := fmt.Sprintf("<!%s> *Following TLS/SSL host(s) is/are in ALERT state (%d hosts checked):*", txtMsgSpecialWord, len(tlsHosts))
+		debug.Printf("'txtMsgToSend': '%s'\n", txtMsgToSend)
 		if err := sc.Post(&slack.Payload{
-			Text:        fmt.Sprintf("<!%s> *Following TLS/SSL host(s) is/are in ALERT state (%d hosts checked):*", txtMsgSpecialWord, len(tlsHosts)),
+			Text:        txtMsgToSend,
 			Attachments: atchmnts,
 		}); err != nil {
 			log.Printf("Error sending message to Slack incoming webhook: %s\n", err.Error())
