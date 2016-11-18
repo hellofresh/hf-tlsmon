@@ -4,15 +4,16 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/juju/deputy"
-	slack "github.com/monochromegane/slack-incoming-webhooks"
-	"github.com/peterbourgon/g2s"
 	"log"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/juju/deputy"
+	slack "github.com/monochromegane/slack-incoming-webhooks"
+	"github.com/peterbourgon/g2s"
 )
 
 // Allow logging of debug information (see: https://gist.github.com/a53mt/60c1002955e6d3096078).
@@ -141,7 +142,7 @@ func checkTLSHosts() (string, error) {
 		StdoutLog: func(b []byte) {
 			cmdStdoutPipeBuffer.WriteString(string(b) + "\n")
 		},
-		Timeout: time.Second * 30,
+		Timeout: time.Second * 180,
 	}
 	// It took me a long time to figure *this* *specific* *order* of args to pass to exec.Command:
 	//     sh interpreter -> sh interpreter option '-c' -> cmd to exececute by shell interpreter as *one string*.
