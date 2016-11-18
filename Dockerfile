@@ -14,7 +14,7 @@ FROM gliderlabs/alpine:3.4
 #
 
 # The release version of hf-tlsmon to add to the container.
-ENV HF_TLSMON_REL v0.0.7
+ENV HF_TLSMON_REL v0.0.8
 
 # Put sslcheck command into place.
 COPY sslcheck /usr/local/bin/sslcheck
