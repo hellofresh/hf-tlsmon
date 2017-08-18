@@ -1,10 +1,10 @@
 # See: https://github.com/gliderlabs/docker-alpine
-FROM gliderlabs/alpine:3.4
+FROM gliderlabs/alpine:3.6
 
 #
 # Usage:
 # - mount 'sslcheck' hosts file to '/etc/hf-tlsmon/tlshosts_to_check',
-# - use '-e' to set following environment variables: 
+# - use '-e' to set following environment variables:
 #   SLACK_INCOMING_WEBHOOK_URL -- full URL as provided by Slack,
 #   CERT_ALERT_THRESHOLD       -- an integer value indicating when an alert gets raised
 #                                 for a TLS host based on the days left until a TLS cert expires,
@@ -32,4 +32,4 @@ ADD ca-certificates.crt /etc/ssl/certs/
 VOLUME ["/etc/hf-tlsmon"]
 
 # It is a cmd-like container, so hf-tlsmon utility runs immediately after container startup.
-ENTRYPOINT ["/usr/local/bin/hf-tlsmon"]
+CMD "/usr/local/bin/hf-tlsmon"
