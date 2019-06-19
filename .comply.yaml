@@ -1,7 +1,9 @@
-# This is an auto-generated .comply.yaml metadata file to easy
+# This is an auto-generated .comply.yaml metadata file to
 # setup a GitHub repo with the minimal required information.
-# You are invited to update the commented attributes and make it
-# more complete with information about this repo
+# You can update the commented attributes providing more
+# information about this repo
+#
+#
 # description: |
 #   Enter here a brief and useful information about this code base
 
@@ -10,6 +12,7 @@ known-name: hf-tlsmon
 squad: engineering-releases
 tribe: platform
 # concourse-team: platform.engineering-releases
+# slack-channel: "#your-channel-here"
 # labels:
 # - label1
 # - label2
